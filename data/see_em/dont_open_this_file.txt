@@ -1,0 +1,1 @@
+notvirus.exe would like permission to modify your registry - yes/no?

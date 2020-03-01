@@ -1,0 +1,8 @@
+.ipynb_checkpoints
+__pycache__
+.vscode
+*_master.ipynb
+*.pyc
+*_complete.py
+*.docx
+*.exe
