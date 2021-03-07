@@ -1,73 +1,107 @@
 # Supplementary classes and functions for ENGSCI233 notebook Error.ipynb
-# author: David Dempsey
+# original author: David Dempsey
+# updates for Google Colab by Bryan Ruddy
 
 # module imports
 import numpy as np
 from matplotlib import pyplot as plt
-from ipywidgets import Checkbox, Dropdown, IntSlider, Layout, HBox, VBox, interact, fixed
+from ipywidgets import Checkbox, Dropdown, IntSlider, Layout, HBox, VBox, interact, fixed, Output
 from IPython.display import display
 from decimal import *
 getcontext().prec = 128
 
-# Class and functions for "Fun with Floats" exercise
-class Fwf:
-	def __init__(self, n=7):
-		# create empty axes
-		self.fig,self.ax = plt.subplots(1,1)
-		self.fig.set_size_inches([9,1])
-		self.ax.axis('off')
-		self.ax.set_xlim([0,1])
-		self.ax.set_ylim([0,1])
-		
-		# create empty text annotations
-		self.text = self.ax.text(-0.05,0.5, '', size = 12, ha = 'left')
-				
-		# create widgets
-		items = [Checkbox(False, description='1/{:d}'.format(2**i)) for i in range(1,n)]
-		items = [Dropdown(options = ['-4','-3','-2','-1','0','1','2','3','4'], value = '0', description='$e$')]+items
-		self.widgets = items
-				
-		# set initial state
-		self.update(None)
-	def update(self, change):
-		# get widget state
-		fracs = []
-		exponent = int(self.widgets[0].value)
-		fracs = [w.value for w in self.widgets[1:]]
-		
-		# assemble new string
-		# -------------------
-			# exponent
-		sum_str = '$\\quad=\\quad 2^{'+'{:d}'.format(exponent)+'}\\times (1\\quad+\\quad$'
-		sum_flt = 1.
-			# significand
-		for i,j in enumerate(fracs):
-			if j:
-				sum_str += '$\\frac{1}{'+'{:d}'.format(2**(i+1))+'}\\quad+\\quad$'												   
-				sum_flt += 1./(2**(i+1))
-			# float value
-		sum_flt *= 2**exponent
-		sum_str = '$'+'{:6.5e}'.format(sum_flt)+'$'+sum_str[:-12]+')$'	
-		
-		# update annotation
-		self.text.set_text(sum_str)
-		
-		# redraw
-		self.fig.canvas.draw()
-	def plot(self):
-		# check widgets for updates
-		for w in self.widgets:
-			w.observe(self.update, 'value')
-		self.update(None)
-		
-		# widget layout
-		col_layout=Layout(display='flex', flex_flow='row-wrap', width="100%", justify_content='flex-end', align_items='center')
-		return HBox(self.widgets, layout=col_layout)
-		
-def fun_with_floats():
-	fwf = Fwf()
-	w = fwf.plot()
-	display(w)
+if 'google.colab' in str(get_ipython()):
+    def fun_with_floats()
+        items = [Checkbox(False, description='1/{:d}'.format(2**i)) for i in range(1,7)]
+        items = [Dropdown(options = ['-4','-3','-2','-1','0','1','2','3','4'], value = '0', description='Exponent')]+items
+        col_layout=Layout(display='flex', flex_flow='row-wrap', width="100%", justify_content='flex-end', align_items='center')
+        big_widget = HBox(items, layout=col_layout)
+        out_widget = Output()
+        display(big_widget,out_widget)
+        with out_widget:
+            print('Try me!')
+
+        # Callback function for updates
+        def on_value_change(change):
+            exponent = int(items[0].value)
+            fracs = [w.value for w in items[1:]]
+            sum_str = ' = 2^'+'{:d}'.format(exponent)+' × (1 + '
+            sum_flt = 1.
+            for i,j in enumerate(fracs):
+                if j:
+                    sum_str += r'1/'+'{:d}'.format(2**(i+1))+' + '
+                    sum_flt += 1./(2**(i+1))
+                # float value
+            sum_flt *= 2**exponent
+            sum_str = '{:6.5e}'.format(sum_flt)+sum_str[:-3]+')'
+
+            out_widget.clear_output()
+            with out_widget:
+                print(sum_str)
+
+        # Configure callbacks and go!
+        for w in items:
+          w.observe(on_value_change, names='value')
+else:
+    # Class and functions for "Fun with Floats" exercise
+    class Fwf:
+        def __init__(self, n=7):
+            # create empty axes
+            self.fig,self.ax = plt.subplots(1,1)
+            self.fig.set_size_inches([9,1])
+            self.ax.axis('off')
+            self.ax.set_xlim([0,1])
+            self.ax.set_ylim([0,1])
+            
+            # create empty text annotations
+            self.text = self.ax.text(-0.05,0.5, '', size = 12, ha = 'left')
+                    
+            # create widgets
+            items = [Checkbox(False, description='1/{:d}'.format(2**i)) for i in range(1,n)]
+            items = [Dropdown(options = ['-4','-3','-2','-1','0','1','2','3','4'], value = '0', description='$e$')]+items
+            self.widgets = items
+                    
+            # set initial state
+            self.update(None)
+        def update(self, change):
+            # get widget state
+            fracs = []
+            exponent = int(self.widgets[0].value)
+            fracs = [w.value for w in self.widgets[1:]]
+            
+            # assemble new string
+            # -------------------
+                # exponent
+            sum_str = '$\\quad=\\quad 2^{'+'{:d}'.format(exponent)+'}\\times (1\\quad+\\quad$'
+            sum_flt = 1.
+                # significand
+            for i,j in enumerate(fracs):
+                if j:
+                    sum_str += '$\\frac{1}{'+'{:d}'.format(2**(i+1))+'}\\quad+\\quad$'												   
+                    sum_flt += 1./(2**(i+1))
+                # float value
+            sum_flt *= 2**exponent
+            sum_str = '$'+'{:6.5e}'.format(sum_flt)+'$'+sum_str[:-12]+')$'	
+            
+            # update annotation
+            self.text.set_text(sum_str)
+            
+            # redraw
+            self.fig.canvas.draw()
+        def plot(self):
+            # check widgets for updates
+            for w in self.widgets:
+                w.observe(self.update, 'value')
+            self.update(None)
+            
+            # widget layout
+            col_layout=Layout(display='flex', flex_flow='row-wrap', width="100%", justify_content='flex-end', align_items='center')
+            return HBox(self.widgets, layout=col_layout)
+            
+    def fun_with_floats():
+        fwf = Fwf()
+        w = fwf.plot()
+        display(w)
 
 # Class and functions for "Exponential" exercise
 class Exp:
