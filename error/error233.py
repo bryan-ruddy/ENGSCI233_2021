@@ -13,7 +13,7 @@ getcontext().prec = 128
 print(str(get_ipython()))
 
 if 'google.colab' in str(get_ipython()):
-    def fun_with_floats()
+    def fun_with_floats():
         items = [Checkbox(False, description='1/{:d}'.format(2**i)) for i in range(1,7)]
         items = [Dropdown(options = ['-4','-3','-2','-1','0','1','2','3','4'], value = '0', description='Exponent')]+items
         col_layout=Layout(display='flex', flex_flow='row-wrap', width="100%", justify_content='flex-end', align_items='center')
