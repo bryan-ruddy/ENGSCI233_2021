@@ -10,8 +10,6 @@ from IPython.display import display
 from decimal import *
 getcontext().prec = 128
 
-print(str(get_ipython()))
-
 if 'google.colab' in str(get_ipython()):
     def fun_with_floats():
         items = [Checkbox(False, description='1/{:d}'.format(2**i)) for i in range(1,7)]
