@@ -27,7 +27,7 @@ def harmonic_mean(xs):
 	assert len(xs) > 0, 'xs has zero-length'
 	
 	# compute harmonic mean
-	xharm = 1./(np.sum([1./xi for xi in xs]))
+	xharm = len(xs)./(np.sum([1./xi for xi in xs]))
 	
 	# check number is defined
 	if xharm != xharm:
