@@ -9,7 +9,7 @@ def test_answer():
     assert approx_factorial(-np.inf) == 0
 
 def test_answer2():
-    with pytest.raises(ValueError)
+    with pytest.raises(ValueError):
         approx_factorial(-3)
     with pytest.raises(TypeError):
         approx_factorial('Colorless green ideas sleep furiously')
